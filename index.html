@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Collatz conjecture tester</title>
+		<link rel="stylesheet" href="style.css">
+		<script>
+			$ = (q, n) => (n || document).querySelector(q);
+			$$ = (q, n) => (n || document).querySelectorAll(q);
+			console.log('hi');
+		</script>
+	</head>
+	<body>
+		<h1>Collatz conjecture tester</h1>
+		<p id="bigint-warning" class="warn" style="display:none">Uh-oh, the tester would not work because this browser does not support <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt"><code>BigInt</code></a>. Sorry!</p>
+		<script>
+			if (typeof BigInt == 'undefined') {
+				$('#bigint-warning').style.display = 'block';
+			}
+
+			try {
+				eval('1n');
+			} catch (e) {
+				$('#bigint-warning').style.display = 'block';
+			}
+		</script>
+		<p>Test if the <a href="https://en.wikipedia.org/wiki/Collatz_conjecture">Collatz sequence</a> of an arbitrary positive integer eventually reaches 1.</p>
+		<div>
+			<input id="num" type="text" placeholder="Enter a positive integer">
+			<span id="num-message" style="display:none"></span>
+			<script>
+				function setErrorMessage(message) {
+					if (!message) {
+						$('#num').classList.remove('error');
+						$('#num-message').innerText = '';
+						$('#num-message').style.display = 'none';
+					} else {
+						$('#num').classList.add('error');
+						$('#num-message').innerText = message;
+						$('#num-message').style.display = 'inline-block';
+					}
+				}
+			</script>
+		</div>
+		<div style="margin-top:.5em"><button id="submit">test</button></div>
+		<h2>Result</h2>
+		<p><span class="odd">red</span>: odd, <span class="even">green</span>: even</p>
+		<table id="result"></table>
+		<script>
+			function normalizeInput(input) {
+				return input.replace(/,|\s/g, '');
+			}
+
+			function getErrorMessage(input) {
+				if (!/^\+?[0-9]+$/.test(input) || /^\+?0+$/.test(input)) {
+					return 'Enter a positive integer!';
+				}
+
+				return false;
+			}
+
+			function iterate(num) {
+				if (num % 2n == 0) {
+					return num / 2n;
+				} else {
+					return 3n * num + 1n;
+				}
+			}
+
+			function printSequence(num) {
+				var $table = $('#result');
+				$table.innerHTML = '<tr><th>#</th><th>the number</th></tr>';
+
+				var i = 0;
+				while (true) {
+					var $tr = document.createElement('tr');
+
+					var $td1 = document.createElement('td');
+					$td1.innerText = i;
+					$tr.appendChild($td1);
+
+					var $td2 = document.createElement('td');
+					$td2.innerText = num;
+					$td2.classList.add(num == 1 ? 'one' : num % 2n == 0 ? 'even' : 'odd');
+					$tr.appendChild($td2);
+					
+					$table.appendChild($tr);
+
+					if (num == 1) break;
+
+					i++;
+					num = iterate(num);
+				}
+			}
+
+			$('#num').addEventListener('keydown', evt => {
+				if (evt.key == 'Enter') {
+					evt.preventDefault();
+					$('#submit').click();
+				}
+			});
+
+			$('#num').addEventListener('input', evt => {
+				var input = normalizeInput($('#num').value);
+
+				if (!input.length) {
+					setErrorMessage(false);
+				} else {
+					var message = getErrorMessage(input);
+					setErrorMessage(message);
+				}
+			})
+
+			$('#submit').addEventListener('click', () => {
+				var input = normalizeInput($('#num').value);
+				var num;
+
+				var message = getErrorMessage(input);
+				setErrorMessage(message);
+
+				if (message) {
+					alert(message);
+					return;
+				}
+
+				try {
+					num = BigInt(input);
+				} catch (e) {
+					alert('Errored! Check out the console to see the message.');
+					console.error(e);
+					return;
+				}
+
+				if (num <= 0) {
+					alert('How did this happen?');
+					return;
+				}
+
+				printSequence(num);
+			});
+		</script>
+	</body>
+</html>

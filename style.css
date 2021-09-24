@@ -1,0 +1,76 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    color: #666;
+}
+
+h1, h2, a, th {
+    color: #222;
+}
+
+code {
+    font-family: Consolas, 'Courier New', Courier, monospace;
+}
+
+#num {
+    width: 100%;
+    font-size: .95em;
+    padding: .7em;
+    border: 1px #222 solid;
+    border-radius:.5em;
+}
+
+.error {
+    outline-color: #EF5350;
+    border-color: #EF5350!important;
+}
+
+#num-message {
+    margin-top: .7em;
+    font-size: .9em;
+    margin-left: .7em;
+    color: #EF5350;
+}
+
+button {
+    background-color: #222;
+    color: white;
+    border: none;
+    border-radius: .5em;
+    padding: .7em 1em;
+    text-transform: uppercase;
+}
+
+p.warn {
+    background-color: #FFEBEE;
+    border-radius: .7em;
+    border: 1px #EF5350 solid;
+    padding: 1em;
+    color: #222;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px #ccc solid;
+    padding: .7em;
+}
+
+.one {
+    font-weight: bold;
+    color: #222;
+}
+
+.even {
+    color: green;
+}
+
+.odd {
+    color: red;
+}
